@@ -50,10 +50,10 @@ def genereTens(sigma1,omega,pasTemps,fin):
     # cette fonction doit générer une matrice de 6 colonnes, chaque ligne étant le tenseur à un instant du cycle, et de la forme [sigma1*cos(omega*t),0,0,0,0,0]
     return tens
 def genereTensOrt(sigma1,omega,pasTemps,fin):
-    tens = np.array([0,0,sigma1,0,0,0])
+    tens = np.array([0,0,0,sigma1,0,0])
     for i in range(int(fin/pasTemps)):
         t = (i+1)*pasTemps
-        ligne = np.array([0,0,sigma1*cos(omega*t),0,0,0])
+        ligne = np.array([0,0,0,sigma1*cos(omega*t),0,0])
         tens = np.vstack((tens, ligne))
     # omega est la pulsation, vous pouvez choisir 2*pi par exemple
     # sigma1 est fixe, par exemple 100 MPa
@@ -102,6 +102,23 @@ def nuage(sigma1,omega,pasTemps,fin):
     """
     points = np.array([0,0])
     tensTot = genereTens(sigma1,omega,pasTemps,fin)
+    for t in range(int(fin/pasTemps)):
+        tens = tensTot[t]
+        cisMax,_ = amplitudeTangMax(tens)
+        hydros = hydro(tens)
+        ligne = np.array([hydros,cisMax])
+        points = np.vstack((points, ligne))
+    return points
+
+
+
+def nuageOrt(sigma1,omega,pasTemps,fin):
+    """
+    Le but de la fonction est de tracer les contraintes tangentielles maximales en fonction de la 
+    pression hydrostatique
+    """
+    points = np.array([0,0])
+    tensTot = genereTensOrt(sigma1,omega,pasTemps,fin)
     for t in range(int(fin/pasTemps)):
         tens = tensTot[t]
         cisMax,_ = amplitudeTangMax(tens)
