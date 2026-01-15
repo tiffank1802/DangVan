@@ -93,7 +93,7 @@ def recentre(matDev):
 
 
 if __name__ == "__main__":
-    matTens = dv.genereTens(100,2*pi,0.1,1)
+    matTens = dv.load_tens_from_csv('./datas/tensors_uniaxial.csv')
     res = CalculMatDev(matTens)
 
 # trace le nuage de points J2(matDev)(t),p(t))
