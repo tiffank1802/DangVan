@@ -19,13 +19,6 @@ def normale(theta,phi):
     return vN.T
 
 # Cellule 4 : Fonction tens_to_mat
-def tens_to_mat(liste):
-    if isinstance(liste,list):
-        liste = np.array(liste)
-    res = np.array([[liste[0],liste[3],liste[4]],
-                    [liste[3],liste[1],liste[5]],
-                    [liste[4],liste[5],liste[2]]])
-    return res
 
 # Cellule 5 : Fonction contTang
 def mat_to_tens(mat):
@@ -42,35 +35,22 @@ def contTang(tens,vN):
 # Cellule 6 : Fonction hydro
 def hydro(tens):
     # cette fonction doit retourner la pression hydrostatique associée à ce tenseur (c'est pour un instant du cycle !)
-    if isinstance(tens, np.ndarray):
-        if tens.ndim == 2 and tens.shape == (3, 3):
-            return np.trace(tens) / 3
-        elif tens.ndim == 1:
-            if len(tens) == 6:
-                return (tens[0] + tens[1] + tens[2]) / 3
-            elif len(tens) == 3:
-                return np.sum(tens) / 3
-            else:
-                raise ValueError("Vector must be of length 3 or 6")
-        elif tens.ndim == 2:
-            # assume array of vectors
-            if tens.shape[1] not in [3, 6]:
-                raise ValueError("Each row must be length 3 or 6")
-            res = []
-            for i in range(tens.shape[0]):
-                row = tens[i]
-                if tens.shape[1] == 6:
-                    p = (row[0] + row[1] + row[2]) / 3
-                else:  # 3
-                    p = np.sum(row) / 3
-                res.append(p)
-            return np.array(res)
-        else:
-            raise ValueError("Unsupported tensor shape")
-    else:
-        # if list, convert
-        tens = np.array(tens)
-        return hydro(tens)
+    return (tens[0]+tens[1]+tens[2])/3 if len(tens)==6 else tens[0]
+
+def tens_to_mat(liste):
+    if len(liste) == 6:
+       
+        res = np.array([[liste[0],liste[3],liste[4]],
+                    [liste[3],liste[1],liste[5]],
+                    [liste[4],liste[5],liste[2]]])
+    if len(liste) == 5:
+        res = np.array([[liste[0],liste[2],liste[3]],
+                    [liste[2],liste[1],liste[4]],
+                    [liste[3],liste[4],-(liste[0]+liste[1])]])
+    return res
+
+
+
 
 # Cellule 7 : Fonction genereTens
 def genereTens(sigma1,omega,pasTemps,fin):

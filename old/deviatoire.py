@@ -1,6 +1,8 @@
 import numpy as np
 from math import *
-import versDV as dv
+import old.versDV as dv
+# import versDV as dv
+
 # def deviateur(tens):
     
 #     p = dv.hydro(tens)
@@ -13,16 +15,11 @@ import versDV as dv
 
 
 def deviateur(tens):
-    """
-    cette fonction se base sur les fonctions initialement écrites dans versDV.py pour calculer le tenseur déviateur
-    1. on convertit le tenseur en matrice 3x3
-    2. on calcule la pression hydrostatique
-    3. on soustrait la pression hydrostatique à la matrice
-    4. on reconvertit la matrice déviateur en tenseur
-    5. on retourne le tenseur déviateur
-    """
-    dev=dv.tens_to_mat(tens)-np.eye(3)*dv.hydro(tens)
-    return dv.mat_to_tens(dev)
+    H=dv.hydro(tens)
+    deviat=dv.tens_to_mat(tens)-np.eye(3)*H
+    deviat=dv.mat_to_tens(deviat)
+    deviat=np.delete(deviat, 2)  # on enlève la troisième
+    return deviat
 
 # def hydro(tens):
 #     p = 0
@@ -67,27 +64,30 @@ def diametre(matTens):
     point2=np.zeros(5)
     maxDist=0
     for i in range(matDev.shape[0]-1):
-        point1 = matDev[i]
+        k=i
+        point1 = matDev[k]
         for j in range(i+1,matDev.shape[0]):
             point2 = matDev[j]
             dist=normeTresca(matDev[i]-matDev[j])
             if dist>maxDist:
                     maxDist=dist
-                    point1=matDev[i]
+                    point1=matDev[k]
                     point2=matDev[j]
+                    
     return maxDist, point1, point2
     
 
-def recentre(matDev):
+def recentre(matTens):
     """retourne une matrice de tenseurs déviateurs recentrée par Centre qui est un tenseur."""
 #    taille = matDev.shape
 #   nLig = taille[0]
 #    for i in range(nLig):
 #        ligne = matDev[i] - Centre 
 #        matCentre = np.vstack((matCentre, ligne))
-    points = diametre(matDev)
+    points = diametre(matTens)
     Centre = (points[1] + points[2])/2
-    return matDev - Centre
+    matDev=CalculMatDev(matTens)
+    return [matDev - Centre, Centre]
 
 # class Deviateur:
 

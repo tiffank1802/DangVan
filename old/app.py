@@ -1,8 +1,8 @@
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
-import versDV as dv
-import deviatoire as dev
+import old.versDV as dv
+import old.deviatoire as dev
 from math import pi
 
 st.title("Dang Van Fatigue Criterion Web App")

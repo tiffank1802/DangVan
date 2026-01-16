@@ -1,4 +1,4 @@
-import versDV as dv
+import old.versDV as dv
 import matplotlib.pyplot as plt
 
 # Generate points for uniaxial loading
