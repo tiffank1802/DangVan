@@ -75,5 +75,5 @@ def test_diametre_multiple():
     matDev=dev.CalculMatDev(matTens)
     expected=dev.normeTresca(matDev[0]-matDev[2]),matDev[0],matDev[2]
     result=dev.diametre(matTens)
-    # assert np.isclose(result[0],expected[0])
-    # assert np.allclose(result[1],expected[1])
+    assert np.isclose(result[0],expected[0])
+    assert np.allclose(result[1],expected[1])

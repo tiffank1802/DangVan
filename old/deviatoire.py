@@ -1,7 +1,7 @@
 import numpy as np
 from math import *
-import old.versDV as dv
-# import versDV as dv
+# import old.versDV as dv
+import versDV as dv
 
 # def deviateur(tens):
     
@@ -56,26 +56,36 @@ def normeTresca(tens):
     min = float(np.min(valP))
     return abs(max-min)
 
+# def diametre(matTens):
+#     """calcul la distance maximale entre deux lignes (des déviateurs) au sens de la norme de Tresca) et retourne les deux points extrêmes, """
+    
+#     matDev=CalculMatDev(matTens)
+#     point1=np.zeros(5)
+#     point2=np.zeros(5)
+#     maxDist=0
+#     for i in range(matDev.shape[0]-1):
+#         k=i
+#         point1 = matDev[k]
+#         for j in range(i+1,matDev.shape[0]):
+#             point2 = matDev[j]
+#             dist=normeTresca(matDev[i]-matDev[j])
+#             if dist>maxDist:
+#                     maxDist=dist
+#                     point1=matDev[k]
+#                     point2=matDev[j]
+
+#     return maxDist, point1, point2
 def diametre(matTens):
     """calcul la distance maximale entre deux lignes (des déviateurs) au sens de la norme de Tresca) et retourne les deux points extrêmes, """
-    
+    M=np.zeros((matTens.shape[0],matTens.shape[0]))
     matDev=CalculMatDev(matTens)
-    point1=np.zeros(5)
-    point2=np.zeros(5)
-    maxDist=0
     for i in range(matDev.shape[0]-1):
-        k=i
-        point1 = matDev[k]
         for j in range(i+1,matDev.shape[0]):
-            point2 = matDev[j]
-            dist=normeTresca(matDev[i]-matDev[j])
-            if dist>maxDist:
-                    maxDist=dist
-                    point1=matDev[k]
-                    point2=matDev[j]
-                    
-    return maxDist, point1, point2
-    
+            M[i][j]=normeTresca(matDev[i]-matDev[j])
+            M[j][i]=M[i][j]
+    ind=np.unravel_index(np.argmax(M, axis=None), M.shape)
+    return M[ind], matDev[ind[0]], matDev[ind[1]]
+            
 
 def recentre(matTens):
     """retourne une matrice de tenseurs déviateurs recentrée par Centre qui est un tenseur."""
