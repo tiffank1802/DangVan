@@ -86,7 +86,15 @@ def diametre(matTens):
     ind=np.unravel_index(np.argmax(M, axis=None), M.shape)
     return M[ind], matDev[ind[0]], matDev[ind[1]]
             
-
+def normeJ2(tens):
+    """retourne la norme J2 du tenseur déviateur"""
+    TensM=dv.tens_to_mat(tens)
+    valP = np.linalg.eigvals(TensM)
+    s1=valP[0]
+    s2=valP[1]
+    s3=valP[2]
+    J2=1/6*((s1-s2)**2+(s2-s3)**2+(s3-s1)**2)
+    return sqrt(J2)
 def recentre(matTens):
     """retourne une matrice de tenseurs déviateurs recentrée par Centre qui est un tenseur."""
 #    taille = matDev.shape
