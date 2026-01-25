@@ -55,7 +55,11 @@ def normeTresca(tens):
     max = float(np.max(valP))
     min = float(np.min(valP))
     return abs(max-min)
-
+def normeJ2(tens):
+    """retourne la norme J2 du tenseur déviateur"""
+    TensM=dv.tens_to_mat(tens)
+    J2=np.tensordot(TensM,TensM)/2
+    return sqrt(3*J2)
 # def diametre(matTens):
 #     """calcul la distance maximale entre deux lignes (des déviateurs) au sens de la norme de Tresca) et retourne les deux points extrêmes, """
     
@@ -81,16 +85,12 @@ def diametre(matTens):
     matDev=CalculMatDev(matTens)
     for i in range(matDev.shape[0]-1):
         for j in range(i+1,matDev.shape[0]):
-            M[i][j]=normeTresca(matDev[i]-matDev[j])
+            M[i][j]=normeJ2(matDev[i]-matDev[j])
             M[j][i]=M[i][j]
     ind=np.unravel_index(np.argmax(M, axis=None), M.shape)
     return M[ind], matDev[ind[0]], matDev[ind[1]]
             
-def normeJ2(tens):
-    """retourne la norme J2 du tenseur déviateur"""
-    TensM=dv.tens_to_mat(tens)
-    J2=np.tensordot(TensM,TensM)/2
-    return sqrt(3*J2)
+
 def recentre(matTens):
     """retourne une matrice de tenseurs déviateurs recentrée par Centre qui est un tenseur."""
 #    taille = matDev.shape
