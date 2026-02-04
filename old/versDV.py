@@ -54,10 +54,10 @@ def tens_to_mat(liste):
 
 # Cellule 7 : Fonction genereTens
 def genereTens(sigma1,omega,pasTemps,fin):
-    tens = np.array([sigma1,0,0,0,0,0])
+    tens = np.array([sigma1,0,0,-.1*sigma1,0,0])
     for i in range(int(fin/pasTemps)):
         t = (i+1)*pasTemps
-        ligne = np.array([sigma1*cos(omega*t),0,0,0,0,0])
+        ligne = np.array([sigma1*cos(omega*t),0,0,-.1*sigma1*sin(omega*t),0,0])
         tens = np.vstack((tens, ligne))
     # omega est la pulsation, vous pouvez choisir 2*pi par exemple
     # sigma1 est fixe, par exemple 100 MPa
@@ -86,6 +86,7 @@ def load_tens_from_csv(filename):
 # genereTens(100,2*pi,0.01,1)
 
 # Cellule 9 : Fonction amplitudeTangMax
+
 def amplitudeTangMax(tens):
     # cette fonction doit retourner pour UN instant une liste de deux éléments : 
     # le premier élément est la valeur max_n (norme de contTang) et le deuxième les angles du plan associés
@@ -154,8 +155,17 @@ def traceNuage(points):
     plt.scatter(points[:, 0], points[:, 1])
     plt.xlabel("pression hydrostatique")
     plt.ylabel("amplitude de cisaillement max")
-    plt.title("Nuage de points")
+    plt.grid()
+    plt.title("Cas de traction-compression:Méthode originelle")
     plt.savefig('dangvan_nuage.png')
+    plt.show()
+def traceNuageOrt(points):
+    plt.scatter(points[:, 0], points[:, 1])
+    plt.xlabel("pression hydrostatique")
+    plt.ylabel("amplitude de cisaillement max")
+    plt.grid()
+    plt.title("Cas de torsion pure:Méthode originelle")
+    plt.savefig('dangvan_nuageOrt.png')
     plt.show()
 
 # Cellule 12 : Exécution et visualisation

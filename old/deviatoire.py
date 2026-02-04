@@ -1,7 +1,7 @@
 import numpy as np
 from math import *
-# import old.versDV as dv
 import versDV as dv
+# import old.versDV as dv
 
 # def deviateur(tens):
     
