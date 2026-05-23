@@ -5,8 +5,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from math import *
-import cmath
-import scipy.special as sp
 import pandas as pd
 import os
 
