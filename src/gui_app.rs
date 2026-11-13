@@ -137,7 +137,7 @@ impl eframe::App for DangVanApp {
                         ui.label(format!("Maximum τ + αp : {:.4} MPa", result.max_dang_van));
                         ui.label(format!("Normale critique : [{:.3}, {:.3}, {:.3}]", result.critical_normal[0], result.critical_normal[1], result.critical_normal[2]));
                     });
-                    let points = result.pressure.iter().zip(&result.dang_van_values).map(|(x, y)| [*x, *y]).collect();
+                    let points: Vec<[f64; 2]> = result.pressure.iter().zip(&result.dang_van_values).map(|(x, y)| [*x, *y]).collect();
                     scatter_plot(ui, "Diagramme de Dang Van — angulaire", "Pression hydrostatique p (MPa)", "τ + αp (MPa)", &points, Color32::from_rgb(40, 120, 230));
                 }
                 if let Some(result) = &self.deviatoric_result {
@@ -167,7 +167,7 @@ fn scatter_plot(ui: &mut egui::Ui, title: &str, x_label: &str, y_label: &str, po
     let (rect, _) = ui.allocate_exact_size(Vec2::new(width, 250.0), Sense::hover());
     let plot = Rect::from_min_max(rect.min + Vec2::new(48.0, 12.0), rect.max - Vec2::new(12.0, 34.0));
     let painter = ui.painter().with_clip_rect(plot);
-    painter.rect_stroke(plot, 0.0, Stroke::new(1.0, Color32::GRAY));
+    painter.rect_stroke(plot, 0.0, Stroke::new(1.0_f32, Color32::GRAY));
 
     let (mut xmin, mut xmax, mut ymin, mut ymax) = (f64::INFINITY, f64::NEG_INFINITY, f64::INFINITY, f64::NEG_INFINITY);
     for point in points {
@@ -181,8 +181,8 @@ fn scatter_plot(ui: &mut egui::Ui, title: &str, x_label: &str, y_label: &str, po
     for i in 1..4 {
         let x = plot.left() + plot.width() * i as f32 / 4.0;
         let y = plot.top() + plot.height() * i as f32 / 4.0;
-        painter.line_segment([Pos2::new(x, plot.top()), Pos2::new(x, plot.bottom())], Stroke::new(0.5, Color32::DARK_GRAY));
-        painter.line_segment([Pos2::new(plot.left(), y), Pos2::new(plot.right(), y)], Stroke::new(0.5, Color32::DARK_GRAY));
+        painter.line_segment([Pos2::new(x, plot.top()), Pos2::new(x, plot.bottom())], Stroke::new(0.5_f32, Color32::DARK_GRAY));
+        painter.line_segment([Pos2::new(plot.left(), y), Pos2::new(plot.right(), y)], Stroke::new(0.5_f32, Color32::DARK_GRAY));
     }
     for point in points {
         let px = plot.left() + ((point[0] - xmin) / (xmax - xmin)) as f32 * plot.width();
