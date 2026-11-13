@@ -13,6 +13,8 @@
 - [Contexte](#contexte)
 - [Critère de Dang Van](#critère-de-dang-van)
 - [Méthodes implémentées](#méthodes-implémentées)
+- [Plan de portage Rust](PLAN_RUST.md)
+- [Implémentation Rust et interface egui](#implémentation-rust-et-interface-egui)
 - [Structure du projet](#structure-du-projet)
 - [Résultats](#résultats)
 - [Paramètres matériaux](#paramètres-matériaux-a-et-b)
@@ -102,6 +104,36 @@ $$\tau(t) = \text{Tresca}\left(\underline{\underline{S}}_{\text{new}}(t)\right)$
 Pour la formulation exacte de la plus petite sphère circonscrite dans l'espace des déviateurs, un logiciel dédié (**ChronoCad**, basé sur les travaux *Fast Estimation*) est utilisé comme référence de comparaison.
 
 ---
+
+## Implémentation Rust et interface egui
+
+La bibliothèque Rust et la CLI sont dans `src/`. L'application graphique egui/eframe est dans `src/gui_app.rs` : elle permet de choisir un chargement synthétique (traction-compression, torsion ou multiaxial), de régler l'amplitude, `alpha`, le pas angulaire et la métrique, puis de comparer les deux méthodes et leurs nuages de points.
+
+### Utilisation native
+
+```bash
+cargo test
+cargo run --bin dangvan-gui
+# CLI facultative
+cargo run --bin dangvan -- datas/tensors_uniaxial.csv angular --step-deg 2 --alpha 0.23
+cargo run --bin dangvan -- datas/tensor_multiaxiale.csv deviatoric --metric tresca
+```
+
+### Compilation et lancement WebAssembly
+
+Installer la cible Rust et Trunk, puis depuis la racine du dépôt :
+
+```bash
+rustup target add wasm32-unknown-unknown
+cargo install trunk
+trunk serve --address 0.0.0.0
+# Build optimisé :
+trunk build --release
+```
+
+Trunk utilise `index.html` et la cible `dangvan-gui` déclarée dans `Cargo.toml`. L'application Web s'exécute dans le navigateur via WebAssembly/WebGL. Le workflow `.github/workflows/rust-build.yml` teste les cibles natives, vérifie et construit la cible wasm; après un build réussi sur la branche Arena, il crée un commit pour `Cargo.lock` si ce fichier a changé. Le bundle `dist/` n'est pas commité.
+
+La méthode déviatorique utilise explicitement le **milieu de la paire la plus éloignée**; ce n'est pas une solution exacte de la plus petite sphère englobante. `Tresca` (différence des contraintes principales extrêmes) et `J2` sont sélectionnables séparément. L'application Rust ne supprime ni ne remplace encore les scripts Python.
 
 ## Structure du projet
 
