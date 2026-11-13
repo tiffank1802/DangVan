@@ -1,0 +1,77 @@
+name: Rust and WebAssembly build
+
+on:
+  push:
+    branches:
+      - arena/f05f2845-dangvan
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rust-wasm-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    # Build this Arena branch and PRs targeting main; manual runs stay scoped to this branch.
+    if: github.ref == 'refs/heads/arena/f05f2845-dangvan' || (github.event_name == 'pull_request' && github.base_ref == 'main')
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Install native GUI build libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes \
+            libegl1-mesa-dev \
+            libwayland-dev \
+            libx11-dev \
+            libxkbcommon-dev \
+            libxcursor-dev \
+            libxi-dev \
+            libxrandr-dev
+
+      - name: Install stable Rust and the WebAssembly target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Install Trunk
+        uses: taiki-e/install-action@v2
+        with:
+          tool: trunk
+
+      - name: Generate dependency lockfile
+        run: cargo generate-lockfile
+
+      - name: Test all native targets
+        run: cargo test --locked --all-targets
+
+      - name: Check GUI for WebAssembly
+        run: cargo check --locked --target wasm32-unknown-unknown --bin dangvan-gui
+
+      - name: Build WebAssembly site
+        run: trunk build --release --dist dist
+
+      # Cargo.lock is source-level dependency metadata; the generated dist/ bundle is not
+      # committed, keeping compiled artifacts out of Git.
+      - name: Commit Cargo.lock after successful build
+        if: github.event_name != 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Cargo.lock
+          if git diff --cached --quiet; then
+            echo "Cargo.lock is unchanged; no commit is needed."
+          else
+            git commit -m "chore: lock Rust dependencies"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
