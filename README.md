@@ -108,7 +108,7 @@ Pour la formulation exacte de la plus petite sphère circonscrite dans l'espace 
 
 ## Implémentation Rust et interface egui
 
-La bibliothèque Rust et la CLI sont dans `src/`. L'application graphique egui/eframe est dans `src/gui_app.rs` : elle permet de choisir un chargement synthétique (traction-compression, torsion ou multiaxial), de régler l'amplitude, `alpha`, le pas angulaire et la métrique, puis de comparer les deux méthodes et leurs nuages de points.
+La bibliothèque Rust et la CLI sont dans `src/`. L'application graphique egui/eframe est dans `src/gui_app.rs` : elle permet de choisir un chargement synthétique (traction-compression, torsion ou multiaxial), de régler l'amplitude, `alpha`, la limite matériau `beta`, le pas angulaire et la métrique, puis de comparer les deux méthodes. Les graphiques affichent des graduations numériques et la droite limite `τ = β − αp`; l'interface indique si le maximum calculé respecte ou dépasse `β`. La valeur par défaut de `β` est 50 MPa.
 
 ### Utilisation native
 
