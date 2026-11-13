@@ -1,5 +1,5 @@
 use crate::circle::minimum_enclosing_circle;
-use crate::tensor::{dot, norm, normalize, Vec3};
+use crate::tensor::{dot, normalize, Vec3};
 use crate::{Error, LoadingHistory};
 
 #[derive(Debug, Clone, Copy)]
