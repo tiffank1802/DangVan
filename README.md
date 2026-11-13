@@ -108,7 +108,7 @@ Pour la formulation exacte de la plus petite sphère circonscrite dans l'espace 
 
 ## Implémentation Rust et interface egui
 
-La bibliothèque Rust et la CLI sont dans `src/`. L'application graphique egui/eframe est dans `src/gui_app.rs` : elle permet de choisir un chargement synthétique (traction-compression, torsion ou multiaxial), de régler l'amplitude, `alpha`, la limite matériau `beta`, le pas angulaire et la métrique, puis de comparer les deux méthodes. Les graphiques affichent des graduations numériques et la droite limite `τ = β − αp`; l'interface indique si le maximum calculé respecte ou dépasse `β`. La valeur par défaut de `β` est 50 MPa.
+La bibliothèque Rust et la CLI sont dans `src/`. L'application graphique egui/eframe est dans `src/gui_app.rs` : elle propose une interface « liquid glass » avec panneaux translucides, accents lumineux, sections de paramètres organisées et analyses interactives. Le logo de l’École Centrale de Lyon est affiché avec la mention Centrale Lyon ENISE; le fichier `images/branding/logo_centrale.png` provient du dépôt de modèle de rapport [steren/ecl-tfe-latex](https://github.com/steren/ecl-tfe-latex/tree/master/title/images). L’interface permet de choisir un chargement synthétique (traction-compression, torsion ou multiaxial), de régler l'amplitude, `alpha`, la limite matériau `beta`, le pas angulaire et la métrique, puis de comparer les deux méthodes. Les graphiques affichent des graduations numériques et la droite limite `τ = β − αp`; l'interface indique si le maximum calculé respecte ou dépasse `β`. La valeur par défaut de `β` est 50 MPa.
 
 ### Utilisation native
 
