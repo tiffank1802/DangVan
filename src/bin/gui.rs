@@ -16,10 +16,20 @@ fn main() -> Result<(), eframe::Error> {
 
 #[cfg(target_arch = "wasm32")]
 fn main() {
+    use wasm_bindgen::JsCast;
+
     wasm_bindgen_futures::spawn_local(async {
+        let canvas = web_sys::window()
+            .expect("Fenêtre du navigateur introuvable")
+            .document()
+            .expect("Document du navigateur introuvable")
+            .get_element_by_id("dangvan-canvas")
+            .expect("Canvas #dangvan-canvas introuvable")
+            .dyn_into::<web_sys::HtmlCanvasElement>()
+            .expect("L'élément dangvan-canvas n'est pas un canvas HTML");
         let result = eframe::WebRunner::new()
             .start(
-                "dangvan-canvas",
+                canvas,
                 eframe::WebOptions::default(),
                 Box::new(|_creation_context| Ok(Box::new(gui_app::DangVanApp::new()))),
             )
