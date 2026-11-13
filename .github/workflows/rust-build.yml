@@ -6,7 +6,7 @@ on:
       - arena/f05f2845-dangvan
   pull_request:
     branches:
-      - arena/f05f2845-dangvan
+      - main
   workflow_dispatch:
 
 permissions:
@@ -18,8 +18,8 @@ concurrency:
 
 jobs:
   build:
-    # Keep the workflow scoped to this Arena session branch, including manual runs.
-    if: github.ref == 'refs/heads/arena/f05f2845-dangvan' || (github.event_name == 'pull_request' && github.base_ref == 'arena/f05f2845-dangvan')
+    # Build this Arena branch and PRs targeting main; manual runs stay scoped to this branch.
+    if: github.ref == 'refs/heads/arena/f05f2845-dangvan' || (github.event_name == 'pull_request' && github.base_ref == 'main')
     runs-on: ubuntu-24.04
     steps:
       - name: Check out branch
