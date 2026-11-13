@@ -15,6 +15,7 @@
 - [Méthodes implémentées](#méthodes-implémentées)
 - [Plan de portage Rust](PLAN_RUST.md)
 - [Implémentation Rust et interface egui](#implémentation-rust-et-interface-egui)
+- [Hébergement GitHub Pages](#hébergement-github-pages)
 - [Structure du projet](#structure-du-projet)
 - [Résultats](#résultats)
 - [Paramètres matériaux](#paramètres-matériaux-a-et-b)
@@ -132,6 +133,16 @@ trunk build --release
 ```
 
 Trunk utilise `index.html` et la cible `dangvan-gui` déclarée dans `Cargo.toml`. L'application Web s'exécute dans le navigateur via WebAssembly/WebGL. Le workflow `.github/workflows/rust-build.yml` teste les cibles natives, vérifie et construit la cible wasm; après un build réussi sur la branche Arena, il crée un commit pour `Cargo.lock` si ce fichier a changé. Le bundle `dist/` n'est pas commité.
+
+### Hébergement GitHub Pages
+
+Le workflow `.github/workflows/deploy-pages.yml` construit le site WebAssembly et le déploie automatiquement à chaque mise à jour de `main`. Après fusion de cette configuration :
+
+1. Ouvrir **Settings → Pages** dans le dépôt.
+2. Dans **Build and deployment → Source**, choisir **GitHub Actions**.
+3. Attendre la fin du workflow **Deploy Dang Van to GitHub Pages**.
+
+Le site sera disponible à l’adresse <https://tiffank1802.github.io/DangVan/>. Le `--public-url /DangVan/` du build configure le chemin du dépôt-projet; il faudra le modifier si le nom du dépôt ou le domaine change.
 
 La méthode déviatorique utilise explicitement le **milieu de la paire la plus éloignée**; ce n'est pas une solution exacte de la plus petite sphère englobante. `Tresca` (différence des contraintes principales extrêmes) et `J2` sont sélectionnables séparément. L'application Rust ne supprime ni ne remplace encore les scripts Python.
 
